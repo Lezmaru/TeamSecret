@@ -2,16 +2,21 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:tslfpc/etiquetas.dart';
 import 'package:tslfpc/guardar.dart';
 
 class Crear extends StatefulWidget {
+  final List<String> datosGuardados;
   static String id = 'crear';
+
+  Crear({super.key, required this.datosGuardados});
   @override
   _CrearState createState() => _CrearState();
 }
 
 class _CrearState extends State<Crear> {
   @override
+  String _etiquetaSeleccionada = '';
   String _nombreTarea = '';
   DateTime _fechaTarea = DateTime.now();
   String _etiquetaTarea = 'trabajo';
@@ -70,20 +75,29 @@ class _CrearState extends State<Crear> {
               child: Row(
                 children: [
                   Expanded(
-                    child: DropdownButton(
-                      value: _etiquetaTarea,
-                      items: _dropdownItems,
-                      onChanged: (value) {
-                        setState(() {
-                          _etiquetaTarea = value!;
-                        });
-                      },
-                    ),
-                  ),
+                      child: DropdownButton<String>(
+                    value: _etiquetaSeleccionada,
+                    items: widget.datosGuardados
+                        .map((etiqueta) => DropdownMenuItem<String>(
+                              value: etiqueta,
+                              child: Text(etiqueta),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _etiquetaSeleccionada = value!;
+                      });
+                    },
+                  )),
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
-                      // Coloca aquí la acción que quieres realizar cuando se presione el botón de editar.
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return Etiquetas();
+                        }),
+                      );
                     },
                   ),
                 ],

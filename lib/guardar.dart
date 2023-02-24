@@ -158,7 +158,9 @@ class _GuardarState extends State<Guardar> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
-                  return Crear();
+                  return Crear(
+                    datosGuardados: [],
+                  );
                 }),
               );
             }),
