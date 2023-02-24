@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
           obscureText: true,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            icon: Icon(Icons.lock),
+            icon: Icon(Icons.email),
             hintText: 'Contraseña',
             labelText: 'Contraseña',
           ),
@@ -78,13 +78,17 @@ class _LoginState extends State<Login> {
   Widget _bottonLogin() {
     return StreamBuilder(
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-      return RaisedButton(
+      return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromARGB(255, 0, 0, 0),
+            onPrimary: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
             child: Text('Ingresar'),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
           ),
           onPressed: () {});
     });
