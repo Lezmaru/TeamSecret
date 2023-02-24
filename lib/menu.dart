@@ -74,6 +74,9 @@ class _MenuState extends State<Menu> {
                 MaterialPageRoute(builder: (context) {
                   return Crear(
                     datosGuardados: [],
+                    agregarDato: (String nuevoDato) {},
+                    editarDato: (int indice, String nuevoDato) {},
+                    eliminarDato: (int indice) {},
                   );
                 }),
               );

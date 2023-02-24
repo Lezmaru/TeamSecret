@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(Etiquetas());
+import 'crear.dart';
+
+void main() => runApp(Etiquetas(
+      agregarDato: (String nuevoDato) {},
+      datosGuardados: [],
+      editarDato: (int indice, String nuevoDato) {},
+      eliminarDato: (int indice) {},
+    ));
 
 class Etiquetas extends StatefulWidget {
   static String id = 'etiquetas';
-  const Etiquetas({Key? key}) : super(key: key);
+  const Etiquetas(
+      {Key? key,
+      required List<String> datosGuardados,
+      required void Function(String nuevoDato) agregarDato,
+      required void Function(int indice, String nuevoDato) editarDato,
+      required void Function(int indice) eliminarDato})
+      : super(key: key);
   @override
   _EtiquetasState createState() => _EtiquetasState();
 }
 
 class _EtiquetasState extends State<Etiquetas> {
   List<String> _texts = [];
-
+  List<String> _datosGuardados = ["Trabajo", "Estudio", "Personal"];
   final TextEditingController _textController = TextEditingController();
 
   void _addText() {
@@ -71,21 +84,19 @@ class _EtiquetasState extends State<Etiquetas> {
       context,
       MaterialPageRoute<void>(
         builder: (BuildContext context) {
-          return Scaffold(
-            appBar: AppBar(title: const Text('Textos guardados')),
-            body: Center(
-              child: DropdownButton<String>(
-                value: _texts.isNotEmpty ? _texts[0] : null,
-                onChanged: (String? newValue) {},
-                items: _texts
-                    .map<DropdownMenuItem<String>>(
-                        (String value) => DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            ))
-                    .toList(),
-              ),
-            ),
+          return Crear(
+            datosGuardados: _texts,
+            agregarDato: (String nuevoDato) {
+              setState(() {
+                _texts.add(nuevoDato);
+              });
+            },
+            editarDato: (int indice, String nuevoDato) {
+              setState(() {
+                _texts[indice] = nuevoDato;
+              });
+            },
+            eliminarDato: (int indice) {},
           );
         },
       ),

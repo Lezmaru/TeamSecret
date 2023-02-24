@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:html';
 
 import 'package:flutter/material.dart';
@@ -9,7 +11,12 @@ class Crear extends StatefulWidget {
   final List<String> datosGuardados;
   static String id = 'crear';
 
-  Crear({super.key, required this.datosGuardados});
+  Crear(
+      {super.key,
+      required this.datosGuardados,
+      required Function(String nuevoDato) agregarDato,
+      required Function(int indice, String nuevoDato) editarDato,
+      required Function(int indice) eliminarDato});
   @override
   _CrearState createState() => _CrearState();
 }
@@ -22,7 +29,27 @@ class _CrearState extends State<Crear> {
   String _etiquetaTarea = 'trabajo';
   DateTime selectedDate = DateTime.now();
   String _dateText = 'Seleccionar fecha';
+  TextEditingController _textController = TextEditingController();
+  List<String> _datosGuardados = ["trabajo", "estudio", "personal"];
   var _currentSelectedDate;
+  void _agregarDato(String nuevoDato) {
+    setState(() {
+      _datosGuardados.add(nuevoDato);
+    });
+  }
+
+  void _editarDato(int indice, String nuevoDato) {
+    setState(() {
+      _datosGuardados[indice] = nuevoDato;
+    });
+  }
+
+  void _eliminarDato(int indice) {
+    setState(() {
+      _datosGuardados.removeAt(indice);
+    });
+  }
+
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -75,28 +102,34 @@ class _CrearState extends State<Crear> {
               child: Row(
                 children: [
                   Expanded(
-                      child: DropdownButton<String>(
-                    value: _etiquetaSeleccionada,
-                    items: widget.datosGuardados
-                        .map((etiqueta) => DropdownMenuItem<String>(
-                              value: etiqueta,
-                              child: Text(etiqueta),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _etiquetaSeleccionada = value!;
-                      });
-                    },
-                  )),
+                    child: DropdownButton(
+                      value: _etiquetaTarea,
+                      items: _datosGuardados.map((String etiqueta) {
+                        return DropdownMenuItem(
+                          value: etiqueta,
+                          child: Text(etiqueta),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _etiquetaTarea = value!;
+                        });
+                      },
+                    ),
+                  ),
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) {
-                          return Etiquetas();
-                        }),
+                        MaterialPageRoute(
+                          builder: (context) => Etiquetas(
+                            datosGuardados: _datosGuardados,
+                            agregarDato: _agregarDato,
+                            editarDato: _editarDato,
+                            eliminarDato: _eliminarDato,
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -225,18 +258,3 @@ class _CrearState extends State<Crear> {
     });
   }
 }
-
-List<DropdownMenuItem<String>> _dropdownItems = [
-  DropdownMenuItem(
-    child: Text('Trabajo'),
-    value: 'trabajo',
-  ),
-  DropdownMenuItem(
-    child: Text('Casa'),
-    value: 'casa',
-  ),
-  DropdownMenuItem(
-    child: Text('Personal'),
-    value: 'personal',
-  ),
-];

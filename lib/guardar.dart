@@ -160,6 +160,9 @@ class _GuardarState extends State<Guardar> {
                 MaterialPageRoute(builder: (context) {
                   return Crear(
                     datosGuardados: [],
+                    agregarDato: (String nuevoDato) {},
+                    editarDato: (int indice, String nuevoDato) {},
+                    eliminarDato: (int indice) {},
                   );
                 }),
               );
