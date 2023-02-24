@@ -20,6 +20,7 @@ class _GuardarState extends State<Guardar> {
   TextEditingController _nombreTareaController = TextEditingController();
   TextEditingController _fechaTareaController = TextEditingController();
   TextEditingController _etiquetaTareaController = TextEditingController();
+  bool _isHovering = false;
   @override
   void initState() {
     super.initState();
@@ -56,6 +57,8 @@ class _GuardarState extends State<Guardar> {
                 children: [
                   Container(
                     padding: EdgeInsets.all(16),
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.black)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -72,29 +75,47 @@ class _GuardarState extends State<Guardar> {
                   Positioned(
                     right: 10,
                     bottom: 1,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return Guardar(
-                              nombreTarea: _nombreTareaController.text,
-                              fechaTarea:
-                                  DateTime.parse(_fechaTareaController.text),
-                              etiquetaTarea: _etiquetaTareaController.text,
-                            );
-                          }),
-                        );
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      onEnter: (PointerEvent details) {
+                        setState(() {
+                          _isHovering = true;
+                        });
                       },
-                      child: Text('Completar',
+                      onExit: (PointerEvent details) {
+                        setState(() {
+                          _isHovering = false;
+                        });
+                      },
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return Guardar(
+                                nombreTarea: _nombreTareaController.text,
+                                fechaTarea:
+                                    DateTime.parse(_fechaTareaController.text),
+                                etiquetaTarea: _etiquetaTareaController.text,
+                              );
+                            }),
+                          );
+                        },
+                        child: Text(
+                          'Completar',
                           style: TextStyle(
-                              color: Color.fromARGB(255, 0, 29, 174),
-                              decoration: TextDecoration.underline)),
+                            color: _isHovering
+                                ? Color.fromARGB(255, 255, 0, 0)
+                                : Color.fromARGB(255, 0, 29, 174),
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   Positioned(
-                    top: -1,
-                    left: 100,
+                    top: 3,
+                    left: 115,
                     bottom: 1,
                     child: Text('Pendiente'),
                   ),

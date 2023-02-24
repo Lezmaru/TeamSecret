@@ -65,14 +65,29 @@ class _CrearState extends State<Crear> {
             SizedBox(
               height: 10,
             ),
-            DropdownButton(
-              value: _etiquetaTarea,
-              items: _dropdownItems,
-              onChanged: (value) {
-                setState(() {
-                  _etiquetaTarea = value!;
-                });
-              },
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 2,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: DropdownButton(
+                      value: _etiquetaTarea,
+                      items: _dropdownItems,
+                      onChanged: (value) {
+                        setState(() {
+                          _etiquetaTarea = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      // Coloca aquí la acción que quieres realizar cuando se presione el botón de editar.
+                    },
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 60,
