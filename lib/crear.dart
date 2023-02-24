@@ -13,7 +13,7 @@ class Crear extends StatefulWidget {
 class _CrearState extends State<Crear> {
   @override
   String _nombreTarea = '';
-  String _fechaTarea = '';
+  DateTime _fechaTarea = DateTime.now();
   String _etiquetaTarea = 'trabajo';
   DateTime selectedDate = DateTime.now();
   String _dateText = 'Seleccionar fecha';
@@ -148,7 +148,7 @@ class _CrearState extends State<Crear> {
                   if (value != null) {
                     setState(() {
                       selectedDate = value;
-                      _fechaTarea = value.toString();
+                      _fechaTarea = value;
                     });
                   }
                 },
