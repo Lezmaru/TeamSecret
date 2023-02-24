@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:tslfpc/crear.dart';
 
-class Menu extends StatefulWidget {
-  static String id = 'menu';
+class Guardar extends StatefulWidget {
+  final String nombreTarea;
+  final String fechaTarea;
+  final String etiquetaTarea;
+  static String id = 'guardar';
+
+  const Guardar(
+      {super.key,
+      required this.nombreTarea,
+      required this.fechaTarea,
+      required this.etiquetaTarea});
   @override
-  _MenuState createState() => _MenuState();
+  _GuardarState createState() => _GuardarState();
 }
 
-class _MenuState extends State<Menu> {
+class _GuardarState extends State<Guardar> {
+  TextEditingController _nombreTareaController = TextEditingController();
+  TextEditingController _fechaTareaController = TextEditingController();
+  TextEditingController _etiquetaTareaController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    _nombreTareaController.text = widget.nombreTarea;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -29,10 +47,10 @@ class _MenuState extends State<Menu> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
-                'No tiene ninguna tarea registrada',
-                style: TextStyle(
-                  fontSize: 20.0,
+              TextFormField(
+                controller: _nombreTareaController,
+                decoration: InputDecoration(
+                  labelText: 'Nombre de la tarea',
                 ),
               ),
               SizedBox(

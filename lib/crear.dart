@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:tslfpc/guardar.dart';
 
 class Crear extends StatefulWidget {
   static String id = 'crear';
@@ -11,9 +12,11 @@ class Crear extends StatefulWidget {
 
 class _CrearState extends State<Crear> {
   @override
+  String _nombreTarea = '';
+  String _fechaTarea = '';
+  String _etiquetaTarea = 'trabajo';
   DateTime selectedDate = DateTime.now();
   String _dateText = 'Seleccionar fecha';
-  String _dropdownValue = 'trabajo';
   var _currentSelectedDate;
   Widget build(BuildContext context) {
     return SafeArea(
@@ -63,14 +66,18 @@ class _CrearState extends State<Crear> {
               height: 10,
             ),
             DropdownButton(
-              value: _dropdownValue,
+              value: _etiquetaTarea,
               items: _dropdownItems,
               onChanged: (value) {
                 setState(() {
-                  _dropdownValue = value!;
+                  _etiquetaTarea = value!;
                 });
               },
             ),
+            SizedBox(
+              height: 60,
+            ),
+            _bottonGuardar(),
           ]),
         ),
       ),
@@ -98,6 +105,11 @@ class _CrearState extends State<Crear> {
             hintText: 'Ej: Hacer la tarea de matemáticas',
             labelText: 'Nombre de la Tarea',
           ),
+          onChanged: (value) {
+            setState(() {
+              _nombreTarea = value;
+            });
+          },
         ),
       );
     });
@@ -136,9 +148,48 @@ class _CrearState extends State<Crear> {
                   if (value != null) {
                     setState(() {
                       selectedDate = value;
+                      _fechaTarea = value.toString();
                     });
                   }
                 },
+              );
+            }),
+      );
+    });
+  }
+
+  Widget _bottonGuardar() {
+    return StreamBuilder(
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 200.0),
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color.fromARGB(255, 0, 0, 0),
+              onPrimary: Color.fromARGB(255, 255, 255, 255),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
+              ),
+            ),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
+              child: Text(
+                'Guardar',
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return Guardar(
+                    nombreTarea: _nombreTarea,
+                    fechaTarea: _fechaTarea,
+                    etiquetaTarea: _etiquetaTarea,
+                  );
+                }),
               );
             }),
       );
