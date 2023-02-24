@@ -59,8 +59,8 @@ class _LoginState extends State<Login> {
               Icons.email,
             ),
             iconColor: Color.fromARGB(255, 122, 120, 120),
-            hintText: 'ejemplo@correo.com',
-            labelText: 'Correo electrónico',
+            hintText: 'Usuario',
+            labelText: 'Usuario',
           ),
         ),
       );
