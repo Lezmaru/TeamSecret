@@ -106,61 +106,102 @@ class _EtiquetasState extends State<Etiquetas> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Textos',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Textos'),
-        ),
-        body: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        title: 'Etiquetas',
+        home: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color.fromARGB(255, 0, 0, 0),
+            title: const Text('Etiquetas',
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold)),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: _textController,
-                    decoration: const InputDecoration(
-                      hintText: 'Ingrese un texto',
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _textController,
+                                decoration: const InputDecoration(
+                                  hintText: 'Ingrese una etiqueta',
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
+                    ElevatedButton(
+                      onPressed: _addText,
+                      child: const Text('Agregar',
+                          selectionColor: Color.fromARGB(255, 0, 0, 0)),
                     ),
+                  ],
+                ),
+                const Divider(),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _texts.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        title: Text(_texts[index]),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            IconButton(
+                              onPressed: () => _editText(index),
+                              icon: const Icon(Icons.edit),
+                            ),
+                            IconButton(
+                              onPressed: () => _deleteText(index),
+                              icon: const Icon(Icons.delete),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: _addText,
-                  child: const Text('Agregar'),
+                  onPressed: _saveTexts,
+                  child: const Text('Guardar textos'),
                 ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                ElevatedButton(
+                    child: const Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return Crear(
+                            datosGuardados: _datosGuardados,
+                            agregarDato: (String nuevoDato) {
+                              setState(() {
+                                _datosGuardados.add(nuevoDato);
+                              });
+                            },
+                            editarDato: (int indice, String nuevoDato) {
+                              setState(() {
+                                _datosGuardados[indice] = nuevoDato;
+                              });
+                            },
+                            eliminarDato: (int indice) {},
+                          );
+                        }),
+                      );
+                    }),
               ],
             ),
-            const Divider(),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _texts.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(_texts[index]),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        IconButton(
-                          onPressed: () => _editText(index),
-                          icon: const Icon(Icons.edit),
-                        ),
-                        IconButton(
-                          onPressed: () => _deleteText(index),
-                          icon: const Icon(Icons.delete),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-            ElevatedButton(
-              onPressed: _saveTexts,
-              child: const Text('Guardar textos'),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }

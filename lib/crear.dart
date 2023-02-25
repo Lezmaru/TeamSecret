@@ -250,6 +250,8 @@ class _CrearState extends State<Crear> {
                     nombreTarea: _nombreTarea,
                     fechaTarea: _fechaTarea,
                     etiquetaTarea: _etiquetaTarea,
+                    buttonText: '',
+                    buttonText2: '',
                   );
                 }),
               );

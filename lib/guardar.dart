@@ -5,13 +5,18 @@ class Guardar extends StatefulWidget {
   final String nombreTarea;
   final DateTime fechaTarea;
   final String etiquetaTarea;
+  final String buttonText;
+  final String buttonText2;
   static String id = 'guardar';
 
-  const Guardar(
-      {super.key,
-      required this.nombreTarea,
-      required this.fechaTarea,
-      required this.etiquetaTarea});
+  const Guardar({
+    super.key,
+    required this.nombreTarea,
+    required this.fechaTarea,
+    required this.etiquetaTarea,
+    required this.buttonText,
+    required this.buttonText2,
+  });
   @override
   _GuardarState createState() => _GuardarState();
 }
@@ -21,6 +26,10 @@ class _GuardarState extends State<Guardar> {
   TextEditingController _fechaTareaController = TextEditingController();
   TextEditingController _etiquetaTareaController = TextEditingController();
   bool _isHovering = false;
+  bool _isCompleted = false;
+  bool _isCompleted2 = false;
+  String _buttonText = 'Completar';
+  String _buttonText2 = 'Pendiente';
   @override
   void initState() {
     super.initState();
@@ -87,22 +96,59 @@ class _GuardarState extends State<Guardar> {
                           _isHovering = false;
                         });
                       },
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          setState(() {
+                            _isCompleted = !_isCompleted;
+                            _buttonText = _isCompleted
+                                ? 'Marcar como pendiente'
+                                : 'Completar';
+                            _isCompleted2 = !_isCompleted2;
+                            _buttonText2 =
+                                _isCompleted2 ? 'Pendiente' : 'Completado';
+                          });
+                          child:
+                          Text(_isCompleted
+                              ? "Marcar como pendiente"
+                              : "Completar");
+                          child:
+                          Text(_isCompleted2 ? "Pendiente" : "Completado");
+                          Navigator.pop(context, _isCompleted && _isCompleted2);
+                          final result = await Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) {
-                              return Guardar(
-                                nombreTarea: _nombreTareaController.text,
-                                fechaTarea:
-                                    DateTime.parse(_fechaTareaController.text),
-                                etiquetaTarea: _etiquetaTareaController.text,
-                              );
-                            }),
+                            MaterialPageRoute(
+                                builder: (context) => Guardar(
+                                      buttonText: 'Marcar como pendiente',
+                                      buttonText2: 'Completado',
+                                      etiquetaTarea:
+                                          '' + _etiquetaTareaController.text,
+                                      fechaTarea: DateTime.parse(
+                                          _fechaTareaController.text),
+                                      nombreTarea:
+                                          '' + _nombreTareaController.text,
+                                    )),
                           );
+                          // Si el usuario completó el texto, actualiza el estado del texto y muestra "Marcar como pendiente"
+                          if (result != null && result) {
+                            setState(() {
+                              _isCompleted = true;
+                              _isCompleted2 = true;
+                              _buttonText = "Marcar como pendiente";
+                              _buttonText2 = "Completado";
+                            });
+                          }
+                          // Si el usuario marcó el texto como pendiente, actualiza el estado del texto y muestra "Completar"
+                          if (result != null && !result) {
+                            setState(() {
+                              _isCompleted = false;
+                              _isCompleted2 = false;
+                              _buttonText = "Completar";
+                              _buttonText2 = "Pendiente";
+                            });
+                          }
                         },
                         child: Text(
-                          'Completar',
+                          '$_buttonText',
                           style: TextStyle(
                             color: _isHovering
                                 ? Color.fromARGB(255, 255, 0, 0)
@@ -117,7 +163,7 @@ class _GuardarState extends State<Guardar> {
                     top: 3,
                     left: 115,
                     bottom: 1,
-                    child: Text('Pendiente'),
+                    child: Text('$_buttonText2'),
                   ),
                 ],
               ),
