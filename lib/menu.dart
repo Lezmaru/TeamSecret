@@ -69,8 +69,12 @@ class _MenuState extends State<Menu> {
             ),
           ),
           onPressed: () {
-            Navigator.pushNamed(context, Crear.id);
-            print('hola');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) {
+                return Crear(); // Asegúrate de que 'Crear' es la clase correcta para la pantalla que quieres mostrar.
+              }),
+            );
           }),
     );
   }

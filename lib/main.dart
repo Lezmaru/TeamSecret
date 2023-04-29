@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
       routes: {
         Login.id: (context) => Login(),
         Menu.id: (context) => Menu(),
-        Crear.id: (context) => BlocProvider.value(
-              value: context.read<TareaCubit>(),
+        Crear.id: (context) => BlocProvider(
+              create: (context) => TareaCubit(),
               child: Crear(),
             ),
       },

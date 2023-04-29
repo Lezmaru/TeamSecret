@@ -10,10 +10,10 @@ abstract class TareaState {
 class TareaInitial extends TareaState {}
 
 class TareaLoaded extends TareaState {
-  final List<String> datosGuardados;
+  final List<String> datosCargados;
 
-  const TareaLoaded(this.datosGuardados);
+  const TareaLoaded(this.datosCargados);
 
   @override
-  List<String> get post => datosGuardados;
+  List<String> get datosGuardados => datosCargados;
 }
