@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tslfpc/login.dart';
+import 'package:tslfpc/tarea_cubit.dart';
+
+import 'crear.dart';
+import 'menu.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    BlocProvider(
+      create: (context) => TareaCubit(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -20,6 +30,11 @@ class MyApp extends StatelessWidget {
       initialRoute: Login.id,
       routes: {
         Login.id: (context) => Login(),
+        Menu.id: (context) => Menu(),
+        Crear.id: (context) => BlocProvider.value(
+              value: context.read<TareaCubit>(),
+              child: Crear(),
+            ),
       },
     );
   }

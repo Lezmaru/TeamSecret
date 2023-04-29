@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tslfpc/crear.dart';
+import 'package:tslfpc/tarea_cubit.dart';
 
 class Menu extends StatefulWidget {
   static String id = 'menu';
@@ -47,41 +49,29 @@ class _MenuState extends State<Menu> {
   }
 
   Widget _bottonCrear() {
-    return StreamBuilder(
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 200.0),
-        child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: Color.fromARGB(255, 0, 0, 0),
-              onPrimary: Color.fromARGB(255, 255, 255, 255),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 200.0),
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromARGB(255, 0, 0, 0),
+            onPrimary: Color.fromARGB(255, 255, 255, 255),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+          ),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
+            child: Text(
+              '+',
+              style: TextStyle(
+                fontSize: 20.0,
               ),
             ),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
-              child: Text(
-                '+',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) {
-                  return Crear(
-                    datosGuardados: [],
-                    agregarDato: (String nuevoDato) {},
-                    editarDato: (int indice, String nuevoDato) {},
-                    eliminarDato: (int indice) {},
-                  );
-                }),
-              );
-            }),
-      );
-    });
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, Crear.id);
+            print('hola');
+          }),
+    );
   }
 }
