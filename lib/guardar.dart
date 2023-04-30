@@ -46,36 +46,113 @@ class _GuardarState extends State<Guardar> {
                       child: ListView.builder(
                         itemCount: datosGuardados.length,
                         itemBuilder: (context, index) {
-                          final datos = datosGuardados[index].split(', ');
-
-                          if (datos.length < 3) {
-                            while (datos.length < 3) {
-                              datos.add('Valor no definido');
-                            }
-                          }
+                          final tarea =
+                              datosGuardados[index]['tarea']!.contains(', ')
+                                  ? datosGuardados[index]['tarea']!.split(', ')
+                                  : [datosGuardados[index]['tarea']!, ''];
+                          final etiqueta = datosGuardados[index]['etiqueta']!;
 
                           return ListTile(
-                            title: Text('Nombre de tarea: ' + datos[0]),
-                            subtitle: Text('Fecha de tarea: ' +
-                                datos[1] +
+                            title: Text('Nombre de tarea: ' + tarea[0]),
+                            subtitle: Text('Fecha límite de la tarea: ' +
+                                tarea[1] +
                                 '\n' +
                                 'Etiqueta de tarea: ' +
-                                datos[2]),
+                                etiqueta),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.edit),
                                   onPressed: () {
-                                    // Aquí puedes navegar a una nueva página para editar la tarea
-                                    // Pasarías `index` y los datos actuales para rellenar los campos de entrada
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        String nombreTarea = tarea[0];
+                                        DateTime fechaTarea =
+                                            DateTime.parse(tarea[1]);
+                                        String etiquetaTarea = etiqueta;
+
+                                        return StatefulBuilder(
+                                          builder: (context, setState) {
+                                            return AlertDialog(
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  TextField(
+                                                    onChanged: (value) {
+                                                      nombreTarea = value;
+                                                    },
+                                                    decoration: InputDecoration(
+                                                      labelText:
+                                                          'Nombre de tarea',
+                                                    ),
+                                                    controller:
+                                                        TextEditingController(
+                                                            text: nombreTarea),
+                                                  ),
+                                                  TextField(
+                                                    onChanged: (value) {
+                                                      fechaTarea =
+                                                          DateTime.parse(value);
+                                                    },
+                                                    decoration: InputDecoration(
+                                                      labelText:
+                                                          'Fecha de tarea (YYYY-MM-DD)',
+                                                    ),
+                                                    controller:
+                                                        TextEditingController(
+                                                            text: fechaTarea
+                                                                .toIso8601String()),
+                                                  ),
+                                                  TextField(
+                                                    onChanged: (value) {
+                                                      etiquetaTarea = value;
+                                                    },
+                                                    decoration: InputDecoration(
+                                                      labelText:
+                                                          'Etiqueta de tarea',
+                                                    ),
+                                                    controller:
+                                                        TextEditingController(
+                                                            text:
+                                                                etiquetaTarea),
+                                                  ),
+                                                ],
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('Cancelar'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Map<String, String>
+                                                        nuevaTarea = {
+                                                      'tarea':
+                                                          '$nombreTarea, ${fechaTarea.toIso8601String()}',
+                                                      'etiqueta': etiquetaTarea
+                                                    };
+                                                    tareaCubit.editarDato(
+                                                        index, nuevaTarea);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('Guardar'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    );
                                   },
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () {
-                                    // Aquí puedes eliminar la tarea
-                                    tareaCubit.eliminar(index);
+                                    tareaCubit.eliminarDato(index);
                                   },
                                 ),
                               ],

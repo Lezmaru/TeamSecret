@@ -146,10 +146,10 @@ class _CrearState extends State<Crear> {
         if (state is TareaLoaded) {
           return DropdownButton<String>(
             value: _etiquetaTarea,
-            items: state.datosGuardados.map((String value) {
+            items: state.datosGuardados.map((Map<String, String> value) {
               return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
+                value: value['etiqueta'],
+                child: Text(value['etiqueta']!),
               );
             }).toList(),
             onChanged: (String? newValue) {
@@ -199,6 +199,63 @@ class _CrearState extends State<Crear> {
               }),
             );
           }),
+    );
+  }
+
+  Future<void> _manageTagsDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Manage Tags'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: Text("Add Tag"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    // implement your function to add tag
+                  },
+                ),
+                Padding(padding: EdgeInsets.all(8.0)),
+                GestureDetector(
+                  child: Text("Edit Tag"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    // implement your function to edit tag
+                  },
+                ),
+                Padding(padding: EdgeInsets.all(8.0)),
+                GestureDetector(
+                  child: Text("Delete Tag"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    // implement your function to delete tag
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _manageTagsButton() {
+    return IconButton(
+      icon: Icon(Icons.manage_search),
+      onPressed: () {
+        _manageTagsDialog();
+      },
     );
   }
 }
