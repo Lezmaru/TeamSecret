@@ -1,31 +1,92 @@
 import 'package:flutter/material.dart';
-import 'package:tslfpc/crear.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tslfpc/crear.dart';
 import 'package:tslfpc/tarea_cubit.dart';
 
-class Guardar extends StatelessWidget {
-  final String nombreTarea;
-  final DateTime fechaTarea;
-  final String etiquetaTarea;
+class Guardar extends StatefulWidget {
   static String id = 'guardar';
 
-  const Guardar({
-    Key? key,
-    required this.nombreTarea,
-    required this.fechaTarea,
-    required this.etiquetaTarea,
-    required String buttonText,
-    required String buttonText2,
-  }) : super(key: key);
+  @override
+  _GuardarState createState() => _GuardarState();
+}
 
+class _GuardarState extends State<Guardar> {
   @override
   Widget build(BuildContext context) {
+    final tareaCubit = context.watch<TareaCubit>();
+    final datosGuardados = tareaCubit.state.datosGuardados;
+
     return SafeArea(
       child: Scaffold(
         body: Center(
           child: Column(
             children: [
-              // Resto del código
+              Image.asset(
+                'images/logo.png',
+                height: 100.0,
+              ),
+              SizedBox(
+                height: 15.0,
+              ),
+              Text(
+                'Bienvenido',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              datosGuardados.isEmpty
+                  ? Text(
+                      'No tiene ninguna tarea registrada',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: datosGuardados.length,
+                        itemBuilder: (context, index) {
+                          final datos = datosGuardados[index].split(', ');
+
+                          if (datos.length < 3) {
+                            while (datos.length < 3) {
+                              datos.add('Valor no definido');
+                            }
+                          }
+
+                          return ListTile(
+                            title: Text('Nombre de tarea: ' + datos[0]),
+                            subtitle: Text('Fecha de tarea: ' +
+                                datos[1] +
+                                '\n' +
+                                'Etiqueta de tarea: ' +
+                                datos[2]),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () {
+                                    // Aquí puedes navegar a una nueva página para editar la tarea
+                                    // Pasarías `index` y los datos actuales para rellenar los campos de entrada
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    // Aquí puedes eliminar la tarea
+                                    tareaCubit.eliminar(index);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+              SizedBox(
+                height: 20,
+              ),
               _bottonCrear(context),
             ],
           ),
@@ -55,7 +116,6 @@ class Guardar extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            context.read<TareaCubit>().agregarDato(nombreTarea);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) {

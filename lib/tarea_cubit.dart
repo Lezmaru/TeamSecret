@@ -38,4 +38,19 @@ class TareaCubit extends Cubit<TareaState> {
     datosActuales.add(nuevaTarea);
     emit(TareaLoaded(datosActuales));
   }
+
+  // Método para eliminar la tarea
+  void eliminar(int index) {
+    final datosActuales = List.of(state.datosGuardados);
+    datosActuales.removeAt(index);
+    emit(TareaLoaded(datosActuales));
+  }
+
+  // Método para editar la tarea
+  void editar(int index, String nombre, DateTime fecha, String etiqueta) {
+    final tarea = '$nombre, $fecha, $etiqueta';
+    final datosActuales = List.of(state.datosGuardados);
+    datosActuales[index] = tarea;
+    emit(TareaLoaded(datosActuales));
+  }
 }
