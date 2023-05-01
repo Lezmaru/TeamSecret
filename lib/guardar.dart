@@ -180,7 +180,7 @@ class _GuardarState extends State<Guardar> {
                                                   tareaCubit
                                                       .archivarDato(index);
                                                 }
-                                              : null, // Deshabilitar el botón si la tarea no está completada
+                                              : null,
                                         ),
                                         IconButton(
                                           icon: Icon(Icons.delete),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'etiquetas.dart';
 import 'guardar.dart';
-import 'tarea_cubit.dart'; // Importa el Cubit
+import 'tarea_cubit.dart';
 
 class Crear extends StatefulWidget {
   static String id = 'crear';
@@ -230,7 +229,7 @@ class _CrearState extends State<Crear> {
                 SizedBox(height: 10),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.black, // Añade esto para el color negro
+                    primary: Colors.black,
                   ),
                   child: Text('Añadir'),
                   onPressed: () {
@@ -273,7 +272,7 @@ class _CrearState extends State<Crear> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.black, // Añade esto para el color negro
+                    primary: Colors.black,
                   ),
                   child: Text('Editar'),
                   onPressed: () {
@@ -317,7 +316,7 @@ class _CrearState extends State<Crear> {
                 SizedBox(height: 10),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.black, // Añade esto para el color negro
+                    primary: Colors.black,
                   ),
                   child: Text('Eliminar'),
                   onPressed: () {

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tslfpc/crear.dart';
-import 'package:tslfpc/tarea_cubit.dart';
 
 class Menu extends StatefulWidget {
   static String id = 'menu';
@@ -72,7 +70,7 @@ class _MenuState extends State<Menu> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) {
-                return Crear(); // Asegúrate de que 'Crear' es la clase correcta para la pantalla que quieres mostrar.
+                return Crear();
               }),
             );
           }),
