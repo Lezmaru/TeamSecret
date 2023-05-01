@@ -32,6 +32,7 @@ class _CrearState extends State<Crear> {
             AppBar(
               title: Text('Registrar Nueva Tarea'),
               backgroundColor: Color.fromARGB(255, 0, 0, 0),
+              actions: [_manageTagsButton()], // Agregado aquí
             ),
             SizedBox(
               height: 20,
@@ -144,17 +145,23 @@ class _CrearState extends State<Crear> {
     return BlocBuilder<TareaCubit, TareaState>(
       builder: (context, state) {
         if (state is TareaLoaded) {
+          List<String> etiquetas = state.etiquetas;
+
+          if (!etiquetas.contains(_etiquetaTarea)) {
+            _etiquetaTarea = etiquetas.isNotEmpty ? etiquetas[0] : '';
+          }
+
           return DropdownButton<String>(
             value: _etiquetaTarea,
-            items: state.datosGuardados.map((Map<String, String> value) {
+            items: etiquetas.map((String value) {
               return DropdownMenuItem<String>(
-                value: value['etiqueta'],
-                child: Text(value['etiqueta']!),
+                value: value,
+                child: Text(value),
               );
             }).toList(),
             onChanged: (String? newValue) {
               setState(() {
-                _etiquetaTarea = newValue!;
+                _etiquetaTarea = newValue ?? '';
               });
             },
           );
@@ -203,35 +210,124 @@ class _CrearState extends State<Crear> {
   }
 
   Future<void> _manageTagsDialog() async {
+    String? nuevaEtiqueta;
+    String? etiquetaSeleccionada;
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Manage Tags'),
+          title: Text('Gestionar Etiquetas'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                GestureDetector(
-                  child: Text("Add Tag"),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    // implement your function to add tag
+                Text('Añadir Etiqueta:'),
+                TextField(
+                  onChanged: (value) {
+                    nuevaEtiqueta = value;
                   },
                 ),
-                Padding(padding: EdgeInsets.all(8.0)),
-                GestureDetector(
-                  child: Text("Edit Tag"),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    // implement your function to edit tag
+                SizedBox(height: 10),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black, // Añade esto para el color negro
+                  ),
+                  child: Text('Añadir'),
+                  onPressed: () {
+                    if (nuevaEtiqueta != null && nuevaEtiqueta!.isNotEmpty) {
+                      context
+                          .read<TareaCubit>()
+                          .agregarEtiqueta(nuevaEtiqueta!);
+                      Navigator.of(context).pop();
+                    }
                   },
                 ),
-                Padding(padding: EdgeInsets.all(8.0)),
-                GestureDetector(
-                  child: Text("Delete Tag"),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    // implement your function to delete tag
+                SizedBox(height: 10),
+                Text('Editar o Eliminar Etiqueta:'),
+                BlocBuilder<TareaCubit, TareaState>(
+                  builder: (context, state) {
+                    if (state is TareaLoaded) {
+                      List<String> etiquetas =
+                          context.read<TareaCubit>().etiquetas;
+                      if (!etiquetas.contains(etiquetaSeleccionada)) {
+                        etiquetaSeleccionada =
+                            etiquetas.isNotEmpty ? etiquetas[0] : '';
+                      }
+
+                      return DropdownButton<String>(
+                        value: etiquetaSeleccionada,
+                        items: etiquetas.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          etiquetaSeleccionada = newValue ?? '';
+                        },
+                      );
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  },
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black, // Añade esto para el color negro
+                  ),
+                  child: Text('Editar'),
+                  onPressed: () {
+                    if (etiquetaSeleccionada != null &&
+                        etiquetaSeleccionada!.isNotEmpty) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Editar Etiqueta'),
+                              content: TextField(
+                                onChanged: (value) {
+                                  nuevaEtiqueta = value;
+                                },
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('Guardar'),
+                                  onPressed: () {
+                                    if (nuevaEtiqueta != null &&
+                                        nuevaEtiqueta!.isNotEmpty) {
+                                      context.read<TareaCubit>().editarEtiqueta(
+                                          etiquetaSeleccionada!,
+                                          nuevaEtiqueta!);
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text('Cancelar'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          });
+                    }
+                  },
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black, // Añade esto para el color negro
+                  ),
+                  child: Text('Eliminar'),
+                  onPressed: () {
+                    if (etiquetaSeleccionada != null &&
+                        etiquetaSeleccionada!.isNotEmpty) {
+                      context
+                          .read<TareaCubit>()
+                          .eliminarEtiqueta(etiquetaSeleccionada!);
+                      Navigator.of(context).pop();
+                    }
                   },
                 ),
               ],
@@ -239,7 +335,7 @@ class _CrearState extends State<Crear> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Close'),
+              child: Text('Cerrar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

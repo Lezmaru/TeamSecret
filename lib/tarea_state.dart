@@ -5,15 +5,18 @@ abstract class TareaState {
   const TareaState();
 
   List<Map<String, String>> get datosGuardados => const [];
+  List<String> get etiquetas => const [];
+
+  List<Map<String, String>> get archivedTasks => const [];
 }
 
 class TareaInitial extends TareaState {}
 
 class TareaLoaded extends TareaState {
-  final List<Map<String, String>> datosCargados;
+  final List<Map<String, String>> datosGuardados;
+  final List<Map<String, String>> archivedTasks;
+  final List<String> etiquetas;
 
-  const TareaLoaded(this.datosCargados);
-
-  @override
-  List<Map<String, String>> get datosGuardados => datosCargados;
+  TareaLoaded(this.datosGuardados,
+      {required this.etiquetas, this.archivedTasks = const []});
 }
