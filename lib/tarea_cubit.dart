@@ -42,7 +42,7 @@ class TareaCubit extends Cubit<TareaState> {
       {'tarea': 'Ejemplo 1', 'etiqueta': 'trabajo', 'estado': 'Pendiente'},
       {'tarea': 'Ejemplo 2', 'etiqueta': 'estudio', 'estado': 'Pendiente'},
       {'tarea': 'Ejemplo 3', 'etiqueta': 'personal', 'estado': 'Pendiente'},
-    ], etiquetas: _etiquetas!)); // Aquí he agregado el operador "!"
+    ], etiquetas: _etiquetas!));
   }
 
   void agregarDato(Map<String, String> nuevoDato) {
@@ -68,7 +68,7 @@ class TareaCubit extends Cubit<TareaState> {
     Map<String, String> nuevaTarea = {
       'tarea': '$nombreTarea, $fechaTarea',
       'etiqueta': etiquetaTarea,
-      'estado': 'Pendiente' // Agregamos un valor predeterminado para el estado
+      'estado': 'Pendiente'
     };
     datosActuales.add(nuevaTarea);
     emit(TareaLoaded(datosActuales, etiquetas: []));
@@ -77,18 +77,14 @@ class TareaCubit extends Cubit<TareaState> {
   void eliminar(int index) {
     final datosActuales = List<Map<String, String>>.from(state.datosGuardados);
     datosActuales.removeAt(index);
-    emit(TareaLoaded(datosActuales,
-        etiquetas:
-            _etiquetas!)); // Se incluye etiquetas: _etiquetas! aquí también
+    emit(TareaLoaded(datosActuales, etiquetas: _etiquetas!));
   }
 
   void editar(int index, String nombre, DateTime fecha, String etiqueta) {
     final tarea = {'tarea': '$nombre, $fecha', 'etiqueta': etiqueta};
     final datosActuales = List<Map<String, String>>.from(state.datosGuardados);
     datosActuales[index] = tarea;
-    emit(TareaLoaded(datosActuales,
-        etiquetas:
-            _etiquetas!)); // Se incluye etiquetas: _etiquetas! aquí también
+    emit(TareaLoaded(datosActuales, etiquetas: _etiquetas!));
   }
 
   void archivarDato(int index) {
